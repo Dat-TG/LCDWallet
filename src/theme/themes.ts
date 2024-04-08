@@ -4,6 +4,11 @@ import { deepmerge } from '@mui/utils';
 import { Themes } from './types';
 
 const sharedTheme = {
+  typography: {
+    button: {
+      textTransform: 'none',
+    },
+  },
   palette: {
     background: {
       default: '#fafafa',
@@ -57,7 +62,7 @@ const themes: Record<Themes, ThemeOptions> = {
         paper: '#171717',
       },
       primary: {
-        main: '#333',
+        main: '#fff',
       },
     },
   }),

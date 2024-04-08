@@ -2,11 +2,11 @@ import isMobile from '@/utils/is-mobile';
 
 import type { Notifications } from './types';
 
-const title = 'React PWA';
+const title = 'LCDWallet';
 
-const email = 'auther-email@gmail.com';
+const email = 'dat13102k2@gmail.com';
 
-const repository = 'https://github.com/suren-atoyan/react-pwa';
+const repository = 'https://github.com/Dat-TG/LCDWallet';
 
 const messages = {
   app: {
@@ -35,7 +35,7 @@ const notifications: Notifications = {
       vertical: 'bottom',
       horizontal: 'left',
     },
-    autoHideDuration: 6000,
+    autoHideDuration: 5000,
   },
   maxSnack: isMobile ? 3 : 4,
 };
@@ -51,6 +51,7 @@ const defaultMetaTags = {
   description: 'Starter kit for modern web applications',
 };
 const giphy404 = 'https://giphy.com/embed/xTiN0L7EW5trfOvEk0';
+const authorWebsite = 'https://dat-tg.github.io/portfolio/';
 
 export {
   loader,
@@ -62,4 +63,5 @@ export {
   title,
   defaultMetaTags,
   giphy404,
+  authorWebsite,
 };
