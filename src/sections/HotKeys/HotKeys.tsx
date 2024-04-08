@@ -20,9 +20,9 @@ function HotKeys() {
   // But the `react-hotkeys-hook` library, which we use to handle hotkeys provides only hook (`useHotkeys`).
   // And as you know we can't use hooks inside loops (read "Rules of Hooks" - https://reactjs.org/docs/hooks-rules.html).
   // There is always a workaround, but sometimes it's better to avoid premature and unnecessary optimizations :)
-  useHotkeys('alt+s', sidebarActions.toggle);
-  useHotkeys('alt+t', themeActions.toggle);
-  useHotkeys('alt+k', hotKeysDialogActions.toggle);
+  useHotkeys('ALT+S', sidebarActions.toggle);
+  useHotkeys('ALT+T', themeActions.toggle);
+  useHotkeys('ALT+K', hotKeysDialogActions.toggle);
 
   return (
     <Dialog
@@ -37,19 +37,19 @@ function HotKeys() {
         <FlexBox alignItems="center" height={50} justifyContent="space-between">
           <Typography>Toggle Theme</Typography>
           <Button color="warning" variant="outlined" onClick={themeActions.toggle}>
-            alt + t
+            ALT + T
           </Button>
         </FlexBox>
         <FlexBox alignItems="center" height={50} justifyContent="space-between">
           <Typography>Toggle Sidebar</Typography>
           <Button color="warning" variant="outlined" onClick={sidebarActions.toggle}>
-            alt + s
+            ALT + S
           </Button>
         </FlexBox>
         <FlexBox alignItems="center" height={50} justifyContent="space-between">
           <Typography>Toggle Hot Keys&apos; Dialog</Typography>
           <Button color="warning" variant="outlined" onClick={hotKeysDialogActions.toggle}>
-            alt + k
+            ALT + K
           </Button>
         </FlexBox>
       </DialogContent>
