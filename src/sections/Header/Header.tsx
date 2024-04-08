@@ -20,9 +20,11 @@ import { HotKeysButton } from './styled';
 // import { getRandomJoke } from './utils';
 import { useNavigate } from 'react-router-dom';
 import isMobile from '@/utils/is-mobile';
-import { useMediaQuery } from '@mui/material';
+import { Typography, useMediaQuery } from '@mui/material';
 
 import { useTheme as useThemeMUI } from '@mui/material';
+import routes from '@/routes';
+import LogoWallet from '@/components/Logo/Logo';
 
 function Header() {
   const [, sidebarActions] = useSidebar();
@@ -64,16 +66,23 @@ function Header() {
             >
               <MenuIcon />
             </IconButton>
-            <Button
+
+            <FlexBox
               onClick={() => navigate('/')}
-              color="primary"
               sx={{
-                fontWeight: 'bold',
-                textTransform: 'uppercase',
+                flexDirection: 'row',
+                gap: 1,
+                justifyContent: 'center',
+                alignItems: 'center',
+                cursor: 'pointer',
               }}
             >
-              {title}
-            </Button>
+              <LogoWallet />
+
+              <Typography color={'primary'} fontWeight={'bold'} textTransform={'uppercase'}>
+                {title}
+              </Typography>
+            </FlexBox>
           </FlexBox>
           <FlexBox>
             <FlexBox>
@@ -82,6 +91,13 @@ function Header() {
                   <Button LinkComponent={'a'} href={authorWebsite} target="_blank">
                     About me
                   </Button>
+                  {Object.values(routes)
+                    .filter((route) => route.title)
+                    .map(({ path, title }) => (
+                      <Button key={path} LinkComponent={'a'} href={path as string}>
+                        {title}
+                      </Button>
+                    ))}
                 </FlexBox>
               )}
               {IsMd && !isMobile && (
