@@ -5,8 +5,10 @@ import { Button, Typography } from '@mui/material';
 import keystore from '../../assets/keystore.svg';
 import phrase from '../../assets/phrase.svg';
 import privateKey from '../../assets/privateKey.png';
+import { useNavigate } from 'react-router-dom';
 
 function AccessWallet() {
+  const navigate = useNavigate();
   return (
     <>
       <Meta title="Access Your Crypto Wallet on LCDWallet" />
@@ -25,7 +27,13 @@ function AccessWallet() {
         <Typography variant="body1">Please select a method to access your wallet.</Typography>
         <Typography variant="body1" marginBottom={4}>
           Don&apos;t have a wallet?{' '}
-          <Button variant="text" color="primary" LinkComponent={'a'} href="/wallet/create">
+          <Button
+            variant="text"
+            color="primary"
+            onClick={() => {
+              navigate('/wallet/create');
+            }}
+          >
             Create wallet
           </Button>
         </Typography>

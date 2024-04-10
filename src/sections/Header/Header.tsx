@@ -94,7 +94,12 @@ function Header() {
                   {Object.values(routes)
                     .filter((route) => route.title)
                     .map(({ path, title }) => (
-                      <Button key={path} LinkComponent={'a'} href={path as string}>
+                      <Button
+                        key={path}
+                        onClick={() => {
+                          navigate(path as string);
+                        }}
+                      >
                         {title}
                       </Button>
                     ))}

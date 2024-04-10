@@ -6,9 +6,11 @@ import keystore from '../../assets/keystore.svg';
 import phrase from '../../assets/phrase.svg';
 import { useState } from 'react';
 import KeystoreDialog from './KeystoreDialog';
+import { useNavigate } from 'react-router-dom';
 
 function CreateWallet() {
   const [openKeystore, setOpenKeystore] = useState(false);
+  const navigate = useNavigate();
   return (
     <>
       <Meta title="Create A Crypto Wallet" />
@@ -27,7 +29,13 @@ function CreateWallet() {
         <Typography variant="body1">Please select a method to create a new wallet</Typography>
         <Typography variant="body1" marginBottom={4}>
           Already have a wallet?{' '}
-          <Button variant="text" color="primary" LinkComponent={'a'} href="/wallet/access">
+          <Button
+            variant="text"
+            color="primary"
+            onClick={() => {
+              navigate('/wallet/access');
+            }}
+          >
             Access my wallet
           </Button>
         </Typography>
