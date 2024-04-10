@@ -4,8 +4,11 @@ import { CenteredFlexBox } from '@/components/styled';
 import { Button, Typography } from '@mui/material';
 import keystore from '../../assets/keystore.svg';
 import phrase from '../../assets/phrase.svg';
+import { useState } from 'react';
+import KeystoreDialog from './KeystoreDialog';
 
 function CreateWallet() {
+  const [openKeystore, setOpenKeystore] = useState(false);
   return (
     <>
       <Meta title="Create A Crypto Wallet" />
@@ -32,7 +35,7 @@ function CreateWallet() {
           title="Keystore File"
           direction="Using a keystore file online makes your wallet more vulnerable to loss of funds. We don't recommend this method of wallet creation."
           image={keystore}
-          onClick={() => {}}
+          onClick={() => setOpenKeystore(true)}
           sx={{
             marginBottom: 3,
           }}
@@ -45,6 +48,7 @@ function CreateWallet() {
           onClick={() => {}}
         />
       </CenteredFlexBox>
+      <KeystoreDialog open={openKeystore} setOpen={setOpenKeystore} />
     </>
   );
 }
