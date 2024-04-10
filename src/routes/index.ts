@@ -18,6 +18,12 @@ const routes: Routes = {
     title: 'Create wallet',
     icon: WalletOutlined,
   },
+  [Pages.AccessWallet]: {
+    component: asyncComponentLoader(() => import('@/pages/AccessWallet')),
+    path: '/wallet/access',
+    title: 'Access wallet',
+    icon: WalletOutlined,
+  },
   [Pages.NotFound]: {
     component: asyncComponentLoader(() => import('@/pages/NotFound')),
     path: '*',

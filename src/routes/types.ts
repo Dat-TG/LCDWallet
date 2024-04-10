@@ -7,6 +7,7 @@ enum Pages {
   Home,
   NotFound,
   CreateWallet,
+  AccessWallet,
 }
 
 type PathRouteCustomProps = {

@@ -41,11 +41,13 @@ function ButtonWithDirection({ title, direction, image, onClick, sx }: ButtonWit
         <Typography variant={isMd ? 'h5' : 'h6'} fontWeight={'bold'} textAlign={'left'}>
           {title}
         </Typography>
-        <Typography variant={isMd ? 'body1' : 'body2'} textAlign={'left'}>
-          {direction}
-        </Typography>
+        {direction && (
+          <Typography variant={isMd ? 'body1' : 'body2'} textAlign={'left'}>
+            {direction}
+          </Typography>
+        )}
       </Box>
-      <img src={image} alt="Button Image" />
+      <img src={image} alt="Button Image" width={'64px'} />
     </Button>
   );
 }
