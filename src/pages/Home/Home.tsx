@@ -32,12 +32,14 @@ function Home() {
             fontSize: isMd ? '1.25rem' : '0.8rem',
             padding: isMd ? '0.8rem 2rem' : '0.5rem 1rem',
           }}
+          LinkComponent={'a'}
+          href="/wallet/create"
         >
           Create a new wallet
         </Button>
         <Typography variant="body1" textAlign={'center'}>
           Already have a wallet?{isMd ? ' ' : <br></br>}
-          <Button variant="text" color="primary">
+          <Button variant="text" color="primary" LinkComponent={'a'} href="/wallet/access">
             Access my wallet
           </Button>
         </Typography>
