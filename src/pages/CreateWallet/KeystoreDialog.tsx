@@ -23,6 +23,8 @@ import paperPlane from './assets/paper-plane.svg';
 import copy from './assets/copy.svg';
 import thief from './assets/thief.svg';
 import DownloadDirection from './DownloadDirection';
+import iconKeystore from './assets/icon-keystore.png';
+import { CenteredFlexBox } from '@/components/styled';
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -171,6 +173,70 @@ export default function KeystoreDialog({ open, setOpen }: KeystoreDialogProps) {
                 Acknowledge & Download
               </Button>
             </Box>
+          </Box>
+        )}
+        {activeStep === 2 && (
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: isMd ? 'row' : 'column',
+              justifyContent: 'space-between',
+              gap: '24px',
+              padding: '24px',
+            }}
+          >
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+              }}
+            >
+              <Typography variant="h6" sx={{ marginTop: 4, marginBottom: 2 }}>
+                You are done!
+              </Typography>
+              <Typography variant="body1" sx={{ marginBottom: 4 }}>
+                You are now ready to take advantage of all that Ethereum has to offer! Access with
+                keystore file should only be used in an offline setting.
+              </Typography>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleClose}
+                size="large"
+                sx={{
+                  borderRadius: '8px',
+                  paddingY: 2,
+                  paddingX: 4,
+                  fontSize: 16,
+                  marginBottom: 2,
+                }}
+              >
+                Access Wallet
+              </Button>
+              <Button
+                variant="outlined"
+                color="primary"
+                onClick={handleClose}
+                size="large"
+                sx={{
+                  borderRadius: '8px',
+                  paddingY: 2,
+                  paddingX: 4,
+                  fontSize: 16,
+                  marginBottom: 4,
+                }}
+              >
+                Create Another Wallet
+              </Button>
+            </Box>
+            <CenteredFlexBox
+              sx={{
+                width: '100%',
+                height: '100%',
+              }}
+            >
+              <img src={iconKeystore} alt="icon-keystore" width={isMd ? '300px' : '200px'} />
+            </CenteredFlexBox>
           </Box>
         )}
         <Alert severity="warning">
