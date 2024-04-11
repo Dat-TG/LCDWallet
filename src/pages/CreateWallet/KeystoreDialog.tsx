@@ -235,7 +235,7 @@ export default function KeystoreDialog({ open, setOpen }: KeystoreDialogProps) {
                 height: '100%',
               }}
             >
-              <img src={iconKeystore} alt="icon-keystore" width={isMd ? '300px' : '200px'} />
+              <img src={iconKeystore} alt="icon-keystore" width={isMd ? '200px' : '150px'} />
             </CenteredFlexBox>
           </Box>
         )}

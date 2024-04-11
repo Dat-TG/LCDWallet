@@ -19,7 +19,7 @@ function DownloadDirection({ title, direction, image, sx }: DownloadDirectionPro
         alignItems: 'center',
         justifyContent: 'center',
         gap: '16px',
-        border: '1px solid #E0E0E0',
+        border: `1px solid ${muiTheme.palette.primary.main}`,
         padding: '16px',
         borderRadius: '16px',
         ...sx,
