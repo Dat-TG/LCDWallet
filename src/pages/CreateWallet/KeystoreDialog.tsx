@@ -11,6 +11,7 @@ import {
   Alert,
   AlertTitle,
   Box,
+  Button,
   Step,
   StepLabel,
   Stepper,
@@ -18,6 +19,10 @@ import {
   useTheme as useThemeMUI,
 } from '@mui/material';
 import CreatePasswordForm from './CreatePasswordForm';
+import paperPlane from './assets/paper-plane.svg';
+import copy from './assets/copy.svg';
+import thief from './assets/thief.svg';
+import DownloadDirection from './DownloadDirection';
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -42,6 +47,23 @@ export default function KeystoreDialog({ open, setOpen }: KeystoreDialogProps) {
   const muiTheme = useThemeMUI();
   const isMd = useMediaQuery(muiTheme.breakpoints.up('md'));
   const [activeStep, setActiveStep] = React.useState(0);
+  const downloadDirections = [
+    {
+      title: "Don't lose it",
+      direction: 'Be careful, it can not be recovered if you lose it.',
+      image: paperPlane,
+    },
+    {
+      title: "Don't share it",
+      direction: 'Your funds will be stolen if you use this file on a malicious phishing site.',
+      image: thief,
+    },
+    {
+      title: 'Make a backup',
+      direction: 'Secure it like the millions of dollars it may one day be worth.',
+      image: copy,
+    },
+  ];
 
   return (
     <Dialog fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}>
@@ -88,15 +110,76 @@ export default function KeystoreDialog({ open, setOpen }: KeystoreDialogProps) {
               Create a password to encrypt your keystore file.
             </Typography>
             <CreatePasswordForm onSuccessfulSubmit={() => setActiveStep(1)} />
-            <Alert severity="warning">
-              <AlertTitle>NOT RECOMMENDED</AlertTitle>
-              This information is sensitive, and these options should only be used in offline
-              settings by experienced crypto users. You will need your keystore file + password to
-              access your wallet. Please save them in a secure location. We CAN NOT retrieve or
-              reset your keystore/password if you lose them.
-            </Alert>
           </Box>
         )}
+        {activeStep === 1 && (
+          <Box>
+            <Typography variant="body1" sx={{ marginY: 4 }}>
+              Important things to know before downloading your keystore file.
+            </Typography>
+            <Box
+              sx={{
+                display: 'flex',
+                gap: '2rem',
+                marginBottom: 4,
+              }}
+            >
+              {downloadDirections.map((direction, index) => (
+                <DownloadDirection
+                  key={index}
+                  {...direction}
+                  sx={{
+                    flex: 1,
+                  }}
+                />
+              ))}
+            </Box>
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'center',
+                gap: '16px',
+                marginBottom: 4,
+              }}
+            >
+              <Button
+                variant="outlined"
+                color="primary"
+                onClick={() => setActiveStep(0)}
+                size="large"
+                sx={{
+                  borderRadius: '8px',
+                  paddingY: 2,
+                  paddingX: 4,
+                  fontSize: 16,
+                }}
+              >
+                Back
+              </Button>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => setActiveStep(2)}
+                size="large"
+                sx={{
+                  borderRadius: '8px',
+                  paddingY: 2,
+                  paddingX: 4,
+                  fontSize: 16,
+                }}
+              >
+                Acknowledge & Download
+              </Button>
+            </Box>
+          </Box>
+        )}
+        <Alert severity="warning">
+          <AlertTitle>NOT RECOMMENDED</AlertTitle>
+          This information is sensitive, and these options should only be used in offline settings
+          by experienced crypto users. You will need your keystore file + password to access your
+          wallet. Please save them in a secure location. We CAN NOT retrieve or reset your
+          keystore/password if you lose them.
+        </Alert>
       </Box>
     </Dialog>
   );
