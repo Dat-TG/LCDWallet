@@ -31,10 +31,11 @@ function CreatePasswordForm({ onSuccessfulSubmit }: CreatePasswordFormProps) {
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     console.log(data);
-    createWalletKeystore({ password: 'password' }).then((response) => {
+    createWalletKeystore({ password: data.password }).then((response) => {
       console.log(response);
       setKeystore({
         iv: response.iv,
+        salt: response.salt,
         encryptedData: response.encryptedData,
       });
     });

@@ -24,6 +24,10 @@ const routes: Routes = {
     title: 'Access wallet',
     icon: WalletOutlined,
   },
+  [Pages.Dashboard]: {
+    component: asyncComponentLoader(() => import('@/pages/Dashboard')),
+    path: '/wallet/dashboard',
+  },
   [Pages.NotFound]: {
     component: asyncComponentLoader(() => import('@/pages/NotFound')),
     path: '*',

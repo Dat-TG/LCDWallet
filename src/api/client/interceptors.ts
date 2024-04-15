@@ -1,3 +1,5 @@
+import { notifications } from '@/config';
+import Snackbar from '@/utils/notistack/Snackbar';
 import { AxiosError, AxiosInstance, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
 
 interface IRequestAxios extends InternalAxiosRequestConfig {
@@ -26,29 +28,14 @@ const onResponse = (res: AxiosResponse): AxiosResponse => {
   return res;
 };
 
-const onResponseError = async (
-  err: AxiosError,
-  // axiosInstance: AxiosInstance,
-): Promise<AxiosError | undefined> => {
-  // const originalConfig = err.config as InternalAxiosRequestConfig;
-
-  console.log(err);
-  // if (err.response?.status === 401) {
-  //   const currentRefreshToken = localStorage.getItem('refreshToken');
-  //   removeAllToken();
-  //   if (!currentRefreshToken) {
-  //     if (window.location.pathname == '/login') {
-  //       return Promise.reject(err?.response?.data);
-  //     }
-  //     return;
-  //   }
-  //   const token = await userApi.refreshToken(currentRefreshToken!);
-  //   localStorage.setItem('accessToken', token.accessToken);
-  //   localStorage.setItem('refreshToken', token.refreshToken);
-  //   originalConfig.headers.Authorization = `Bearer ${token.accessToken}`;
-
-  //   return axiosInstance(originalConfig);
-  // }
+const onResponseError = async (err: AxiosError): Promise<AxiosError | undefined> => {
+  console.error(err);
+  Snackbar.error(
+    (err?.response?.data as { error: string })?.error || err.message || 'Something went wrong',
+    {
+      autoHideDuration: notifications.options.autoHideDuration,
+    },
+  );
   return Promise.reject(err?.response?.data);
 };
 

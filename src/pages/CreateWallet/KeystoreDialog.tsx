@@ -109,6 +109,7 @@ export default function KeystoreDialog({ open, setOpen }: KeystoreDialogProps) {
           display: 'flex',
           flexDirection: 'column',
           maxWidth: '800px',
+          padding: isMd ? '24px' : '16px',
         }}
       >
         <Stepper activeStep={activeStep} alternativeLabel>

@@ -2,4 +2,11 @@ interface CreateWalletKeystoreRequest {
   password: string;
 }
 
-export type { CreateWalletKeystoreRequest };
+interface AccessWalletKeystoreRequest {
+  iv: string;
+  salt: string;
+  encryptedData: string;
+  password: string;
+}
+
+export type { CreateWalletKeystoreRequest, AccessWalletKeystoreRequest };

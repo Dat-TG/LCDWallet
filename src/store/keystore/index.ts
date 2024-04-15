@@ -5,6 +5,7 @@ const KeystoreState = atom<Keystore>({
   key: 'keystore',
   default: {
     iv: '',
+    salt: '',
     encryptedData: '',
   },
 });

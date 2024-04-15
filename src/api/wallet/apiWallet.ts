@@ -1,10 +1,14 @@
 import { Keystore } from '@/store/keystore/type';
 import AxiosClient from '../client';
-import { CreateWalletKeystoreRequest } from './type';
+import { AccessWalletKeystoreRequest, CreateWalletKeystoreRequest } from './type';
+import { Wallet } from '@/store/wallet/type';
 
-export const createWalletKeystore = async (
-  data: CreateWalletKeystoreRequest,
-) /*: Promise<CreateWalletKeystoreResponse>*/ => {
+export const createWalletKeystore = async (data: CreateWalletKeystoreRequest) => {
   const response = await AxiosClient.post('/wallet/create/keystore', data);
   return response.data as Keystore;
+};
+
+export const accessWalletKeystore = async (data: AccessWalletKeystoreRequest) => {
+  const response = await AxiosClient.post('/wallet/access/keystore', data);
+  return response.data as Wallet;
 };

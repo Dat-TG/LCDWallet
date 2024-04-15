@@ -6,9 +6,12 @@ import keystore from '../../assets/keystore.svg';
 import phrase from '../../assets/phrase.svg';
 import privateKey from '../../assets/privateKey.png';
 import { useNavigate } from 'react-router-dom';
+import React from 'react';
+import KeystoreDialog from './KeystoreDialog';
 
 function AccessWallet() {
   const navigate = useNavigate();
+  const [openKeystoreDialog, setOpenKeystoreDialog] = React.useState(false);
   return (
     <>
       <Meta title="Access Your Crypto Wallet on LCDWallet" />
@@ -40,7 +43,7 @@ function AccessWallet() {
         <ButtonWithDirection
           title="Keystore File"
           image={keystore}
-          onClick={() => {}}
+          onClick={() => setOpenKeystoreDialog(true)}
           sx={{
             marginBottom: 3,
           }}
@@ -57,6 +60,7 @@ function AccessWallet() {
 
         <ButtonWithDirection title="Private Key" image={privateKey} onClick={() => {}} />
       </CenteredFlexBox>
+      <KeystoreDialog open={openKeystoreDialog} setOpen={setOpenKeystoreDialog} />
     </>
   );
 }
