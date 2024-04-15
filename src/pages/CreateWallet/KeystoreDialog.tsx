@@ -25,6 +25,8 @@ import thief from './assets/thief.svg';
 import DownloadDirection from './DownloadDirection';
 import iconKeystore from './assets/icon-keystore.png';
 import { CenteredFlexBox } from '@/components/styled';
+import { useRecoilState } from 'recoil';
+import KeystoreState from '@/store/keystore';
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -66,6 +68,16 @@ export default function KeystoreDialog({ open, setOpen }: KeystoreDialogProps) {
       image: copy,
     },
   ];
+  const [keystore] = useRecoilState(KeystoreState);
+
+  const downloadKeystoreFile = () => {
+    const element = document.createElement('a');
+    const file = new Blob([JSON.stringify(keystore)], { type: 'text/plain' });
+    element.href = URL.createObjectURL(file);
+    element.download = `keystore${new Date().getTime()}.json`;
+    document.body.appendChild(element); // Required for this to work in FireFox
+    element.click();
+  };
 
   return (
     <Dialog fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}>
@@ -161,7 +173,10 @@ export default function KeystoreDialog({ open, setOpen }: KeystoreDialogProps) {
               <Button
                 variant="contained"
                 color="primary"
-                onClick={() => setActiveStep(2)}
+                onClick={async () => {
+                  downloadKeystoreFile();
+                  setActiveStep(2);
+                }}
                 size="large"
                 sx={{
                   borderRadius: '8px',

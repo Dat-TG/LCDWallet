@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { TextField, IconButton, InputAdornment, Button } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
+import { createWalletKeystore } from '@/api/wallet/apiWallet';
+import { useRecoilState } from 'recoil';
+import KeystoreState from '@/store/keystore';
 
 type FormValues = {
   password: string;
@@ -15,6 +18,7 @@ interface CreatePasswordFormProps {
 function CreatePasswordForm({ onSuccessfulSubmit }: CreatePasswordFormProps) {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [, setKeystore] = useRecoilState(KeystoreState);
   const {
     register,
     handleSubmit,
@@ -25,8 +29,15 @@ function CreatePasswordForm({ onSuccessfulSubmit }: CreatePasswordFormProps) {
   });
   const password = watch('password');
 
-  const onSubmit: SubmitHandler<FormValues> = (data) => {
+  const onSubmit: SubmitHandler<FormValues> = async (data) => {
     console.log(data);
+    createWalletKeystore({ password: 'password' }).then((response) => {
+      console.log(response);
+      setKeystore({
+        iv: response.iv,
+        encryptedData: response.encryptedData,
+      });
+    });
     onSuccessfulSubmit();
   };
 
