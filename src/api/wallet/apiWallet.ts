@@ -17,3 +17,8 @@ export const generateMnemonicPhrase = async () => {
   const response = await AxiosClient.get('/wallet/generate/mnemonic');
   return response.data.mnemonic as string;
 };
+
+export const generateQuestion = async (word: string) => {
+  const response = await AxiosClient.get(`/wallet/generate/question?word=${word}`);
+  return response.data.question as string[];
+};

@@ -18,16 +18,11 @@ import {
   useMediaQuery,
   useTheme as useThemeMUI,
 } from '@mui/material';
-import paperPlane from './assets/paper-plane.svg';
-import copy from './assets/copy.svg';
-import thief from './assets/thief.svg';
-import DownloadDirection from './DownloadDirection';
 import iconKeystore from './assets/icon-keystore.png';
 import { CenteredFlexBox } from '@/components/styled';
-import { useRecoilState } from 'recoil';
-import KeystoreState from '@/store/keystore';
 import { useNavigate } from 'react-router-dom';
 import MnemonicPhraseGenerator from './MnemonicPhraseGenerator';
+import PhraseVerification from './PhraseVerification';
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -52,33 +47,6 @@ export default function PhraseDialog({ open, setOpen }: PhraseDialogProps) {
   const muiTheme = useThemeMUI();
   const isMd = useMediaQuery(muiTheme.breakpoints.up('md'));
   const [activeStep, setActiveStep] = React.useState(0);
-  const downloadDirections = [
-    {
-      title: "Don't lose it",
-      direction: 'Be careful, it can not be recovered if you lose it.',
-      image: paperPlane,
-    },
-    {
-      title: "Don't share it",
-      direction: 'Your funds will be stolen if you use this file on a malicious phishing site.',
-      image: thief,
-    },
-    {
-      title: 'Make a backup',
-      direction: 'Secure it like the millions of dollars it may one day be worth.',
-      image: copy,
-    },
-  ];
-  const [keystore] = useRecoilState(KeystoreState);
-
-  const downloadKeystoreFile = () => {
-    const element = document.createElement('a');
-    const file = new Blob([JSON.stringify(keystore)], { type: 'text/plain' });
-    element.href = URL.createObjectURL(file);
-    element.download = `keystore${new Date().getTime()}.json`;
-    document.body.appendChild(element); // Required for this to work in FireFox
-    element.click();
-  };
 
   const navigate = useNavigate();
 
@@ -153,65 +121,9 @@ export default function PhraseDialog({ open, setOpen }: PhraseDialogProps) {
         {activeStep === 1 && (
           <Box>
             <Typography variant="body1" sx={{ marginY: 4 }}>
-              Important things to know before downloading your keystore file.
+              Please select correct words based on their numbers.
             </Typography>
-            <Box
-              sx={{
-                display: 'flex',
-                gap: '2rem',
-                marginBottom: 4,
-              }}
-            >
-              {downloadDirections.map((direction, index) => (
-                <DownloadDirection
-                  key={index}
-                  {...direction}
-                  sx={{
-                    flex: 1,
-                  }}
-                />
-              ))}
-            </Box>
-            <Box
-              sx={{
-                display: 'flex',
-                justifyContent: 'center',
-                gap: '16px',
-                marginBottom: 4,
-              }}
-            >
-              <Button
-                variant="outlined"
-                color="primary"
-                onClick={() => setActiveStep(0)}
-                size="large"
-                sx={{
-                  borderRadius: '8px',
-                  paddingY: 2,
-                  paddingX: 4,
-                  fontSize: 16,
-                }}
-              >
-                Back
-              </Button>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={async () => {
-                  downloadKeystoreFile();
-                  setActiveStep(2);
-                }}
-                size="large"
-                sx={{
-                  borderRadius: '8px',
-                  paddingY: 2,
-                  paddingX: 4,
-                  fontSize: 16,
-                }}
-              >
-                Acknowledge & Download
-              </Button>
-            </Box>
+            <PhraseVerification setActiveStep={setActiveStep} />
           </Box>
         )}
         {activeStep === 2 && (
