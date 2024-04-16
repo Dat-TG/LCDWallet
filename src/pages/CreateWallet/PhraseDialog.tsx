@@ -18,7 +18,6 @@ import {
   useMediaQuery,
   useTheme as useThemeMUI,
 } from '@mui/material';
-import CreatePasswordForm from './CreatePasswordForm';
 import paperPlane from './assets/paper-plane.svg';
 import copy from './assets/copy.svg';
 import thief from './assets/thief.svg';
@@ -28,6 +27,7 @@ import { CenteredFlexBox } from '@/components/styled';
 import { useRecoilState } from 'recoil';
 import KeystoreState from '@/store/keystore';
 import { useNavigate } from 'react-router-dom';
+import MnemonicPhraseGenerator from './MnemonicPhraseGenerator';
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -38,17 +38,17 @@ const Transition = React.forwardRef(function Transition(
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-interface KeystoreDialogProps {
+interface PhraseDialogProps {
   open: boolean;
   setOpen: (value: boolean) => void;
 }
 
-export default function KeystoreDialog({ open, setOpen }: KeystoreDialogProps) {
+export default function PhraseDialog({ open, setOpen }: PhraseDialogProps) {
   const handleClose = () => {
     setOpen(false);
     setActiveStep(0);
   };
-  const steps = ['Create password', 'Download Keystore File', 'Well done'];
+  const steps = ['Write down the words', 'Verification', 'Well done'];
   const muiTheme = useThemeMUI();
   const isMd = useMediaQuery(muiTheme.breakpoints.up('md'));
   const [activeStep, setActiveStep] = React.useState(0);
@@ -101,7 +101,7 @@ export default function KeystoreDialog({ open, setOpen }: KeystoreDialogProps) {
               textAlign: 'center',
             }}
           >
-            Create Wallet with Keystore File
+            Create Wallet with Mnemonic Phrase
           </Typography>
         </Toolbar>
       </AppBar>
@@ -123,11 +123,31 @@ export default function KeystoreDialog({ open, setOpen }: KeystoreDialogProps) {
           ))}
         </Stepper>
         {activeStep === 0 && (
-          <Box>
-            <Typography variant="body1" sx={{ marginY: 4 }}>
-              Create a password to encrypt your keystore file.
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+            }}
+          >
+            <Typography variant="body1" sx={{ marginTop: 4 }}>
+              Write down these words
             </Typography>
-            <CreatePasswordForm onSuccessfulSubmit={() => setActiveStep(1)} />
+            <MnemonicPhraseGenerator />
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => setActiveStep(1)}
+              size="medium"
+              sx={{
+                borderRadius: '8px',
+                paddingY: 2,
+                paddingX: 4,
+                marginY: 4,
+                marginX: 'auto',
+              }}
+            >
+              I wrote them down
+            </Button>
           </Box>
         )}
         {activeStep === 1 && (

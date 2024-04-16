@@ -7,9 +7,11 @@ import phrase from '../../assets/phrase.svg';
 import { useState } from 'react';
 import KeystoreDialog from './KeystoreDialog';
 import { useNavigate } from 'react-router-dom';
+import PhraseDialog from './PhraseDialog';
 
 function CreateWallet() {
   const [openKeystore, setOpenKeystore] = useState(false);
+  const [openPhrase, setOpenPhrase] = useState(false);
   const navigate = useNavigate();
   return (
     <>
@@ -53,10 +55,11 @@ function CreateWallet() {
           title="Mnemonic Phrase"
           direction="Using a Mnemonic Phrase online makes your wallet more vulnerable to loss of funds. We don’t recommend this method of wallet creation."
           image={phrase}
-          onClick={() => {}}
+          onClick={() => setOpenPhrase(true)}
         />
       </CenteredFlexBox>
       <KeystoreDialog open={openKeystore} setOpen={setOpenKeystore} />
+      <PhraseDialog open={openPhrase} setOpen={setOpenPhrase} />
     </>
   );
 }

@@ -12,3 +12,8 @@ export const accessWalletKeystore = async (data: AccessWalletKeystoreRequest) =>
   const response = await AxiosClient.post('/wallet/access/keystore', data);
   return response.data as Wallet;
 };
+
+export const generateMnemonicPhrase = async () => {
+  const response = await AxiosClient.get('/wallet/generate/mnemonic');
+  return response.data.mnemonic as string;
+};
