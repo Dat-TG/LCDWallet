@@ -27,3 +27,8 @@ export const accessWalletMnemonic = async (mnemonic: string) => {
   const response = await AxiosClient.post('/wallet/access/mnemonic', { mnemonic });
   return response.data as Wallet;
 };
+
+export const accessWalletPrivateKey = async (privateKey: string) => {
+  const response = await AxiosClient.post('/wallet/access/privatekey', { privateKey });
+  return response.data.publicKey as string;
+};

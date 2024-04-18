@@ -2,6 +2,10 @@ import React, { useState } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { TextField, IconButton, InputAdornment, Button, Box } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
+import { accessWalletPrivateKey } from '@/api/wallet/apiWallet';
+import { useRecoilState } from 'recoil';
+import WalletState from '@/store/wallet';
+import { useNavigate } from 'react-router-dom';
 
 type FormValues = {
   privateKey: string;
@@ -9,6 +13,8 @@ type FormValues = {
 
 function PrivateKeyInput() {
   const [showPrivateKey, setShowPassword] = useState(false);
+  const [, setWallet] = useRecoilState(WalletState);
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -19,6 +25,14 @@ function PrivateKeyInput() {
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     console.log(data);
+    accessWalletPrivateKey(data.privateKey).then((publicKey: string) => {
+      console.log(data);
+      setWallet({
+        privateKey: data.privateKey,
+        publicKey: publicKey,
+      });
+      navigate('/wallet/dashboard');
+    });
   };
 
   const togglePasswordVisibility = () => {
