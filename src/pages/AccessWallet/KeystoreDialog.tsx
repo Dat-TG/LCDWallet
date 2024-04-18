@@ -184,9 +184,7 @@ export default function KeystoreDialog({ open, setOpen }: KeystoreDialogProps) {
         <Alert severity="warning">
           <AlertTitle>NOT RECOMMENDED</AlertTitle>
           This information is sensitive, and these options should only be used in offline settings
-          by experienced crypto users. You will need your keystore file + password to access your
-          wallet. Please save them in a secure location. We CAN NOT retrieve or reset your
-          keystore/password if you lose them.
+          by experienced crypto users.
         </Alert>
       </Box>
     </Dialog>

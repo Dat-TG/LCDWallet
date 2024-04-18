@@ -9,11 +9,13 @@ import { useNavigate } from 'react-router-dom';
 import React from 'react';
 import KeystoreDialog from './KeystoreDialog';
 import PhraseDialog from './PhraseDialog';
+import PrivateKeyDialog from './PrivateKeyDialog';
 
 function AccessWallet() {
   const navigate = useNavigate();
   const [openKeystoreDialog, setOpenKeystoreDialog] = React.useState(false);
   const [openPhraseDialog, setOpenPhraseDialog] = React.useState(false);
+  const [openPrivateKeyDialog, setOpenPrivateKeyDialog] = React.useState(false);
   return (
     <>
       <Meta title="Access Your Crypto Wallet on LCDWallet" />
@@ -60,10 +62,15 @@ function AccessWallet() {
           }}
         />
 
-        <ButtonWithDirection title="Private Key" image={privateKey} onClick={() => {}} />
+        <ButtonWithDirection
+          title="Private Key"
+          image={privateKey}
+          onClick={() => setOpenPrivateKeyDialog(true)}
+        />
       </CenteredFlexBox>
       <KeystoreDialog open={openKeystoreDialog} setOpen={setOpenKeystoreDialog} />
       <PhraseDialog open={openPhraseDialog} setOpen={setOpenPhraseDialog} />
+      <PrivateKeyDialog open={openPrivateKeyDialog} setOpen={setOpenPrivateKeyDialog} />
     </>
   );
 }

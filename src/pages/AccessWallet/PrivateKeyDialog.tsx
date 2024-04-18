@@ -8,7 +8,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import Slide from '@mui/material/Slide';
 import { TransitionProps } from '@mui/material/transitions';
 import { Alert, AlertTitle, Box, useMediaQuery, useTheme as useThemeMUI } from '@mui/material';
-import PhraseInput from './PhraseInput';
+import PrivateKeyInput from './PrivateKeyInput';
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -19,12 +19,12 @@ const Transition = React.forwardRef(function Transition(
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-interface PhraseDialogProps {
+interface PrivateKeyDialogProps {
   open: boolean;
   setOpen: (value: boolean) => void;
 }
 
-export default function PhraseDialog({ open, setOpen }: PhraseDialogProps) {
+export default function PrivateKeyDialog({ open, setOpen }: PrivateKeyDialogProps) {
   const handleClose = () => {
     setOpen(false);
   };
@@ -50,34 +50,24 @@ export default function PhraseDialog({ open, setOpen }: PhraseDialogProps) {
               textAlign: 'center',
             }}
           >
-            Access Wallet with Mnemonic Phrase
+            Access Wallet with Private Key
           </Typography>
         </Toolbar>
       </AppBar>
       <Box
         sx={{
+          marginY: isMd ? 4 : 2,
+          marginX: 'auto',
           display: 'flex',
           flexDirection: 'column',
-          justifyContent: 'space-between',
-          gap: '24px',
-          padding: isMd ? '24px 48px' : '16px',
+          maxWidth: '800px',
+          padding: isMd ? '24px' : '16px',
         }}
       >
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            flex: 3,
-          }}
-        >
-          <Typography variant="h6" sx={{ marginTop: 4, marginBottom: 2 }}>
-            Enter your Mnemonic Phrase
-          </Typography>
-          <Typography variant="body1" sx={{ marginBottom: 4 }}>
-            Please type the mnemonic phrase you wrote down in the right order.
-          </Typography>
-          <PhraseInput />
-        </Box>
+        <Typography variant="h6" component="div" sx={{ flexGrow: 1 }} marginBottom={4}>
+          Enter your private key
+        </Typography>
+        <PrivateKeyInput />
         <Alert severity="warning">
           <AlertTitle>NOT RECOMMENDED</AlertTitle>
           This information is sensitive, and these options should only be used in offline settings
