@@ -1,13 +1,20 @@
+import { accessWalletMnemonic } from '@/api/wallet/apiWallet';
+import WalletState from '@/store/wallet';
 import { Grid, Typography, TextField, Box, Button } from '@mui/material';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useRecoilState } from 'recoil';
 
 export default function PhraseInput() {
   const [inputValues, setInputValues] = useState<string[]>(Array(12).fill(''));
+  const [, setWallet] = useRecoilState(WalletState);
+  const navigate = useNavigate();
 
   const handlePaste = (index: number, event: React.ClipboardEvent<HTMLDivElement>) => {
     event.preventDefault();
     const pastedText = event.clipboardData.getData('text').trim();
     const words = pastedText.split(' ');
+
     if (words.length == 12) {
       setInputValues(words);
     } else if (words.length == 1) {
@@ -92,6 +99,14 @@ export default function PhraseInput() {
               paddingY: 2,
               paddingX: 4,
               marginY: 4,
+            }}
+            onClick={async () => {
+              console.log(inputValues);
+              accessWalletMnemonic(inputValues.join(' ')).then((data) => {
+                console.log(data);
+                setWallet(data);
+                navigate('/wallet/dashboard');
+              });
             }}
           >
             Access Wallet

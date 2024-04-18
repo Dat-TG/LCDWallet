@@ -22,3 +22,8 @@ export const generateQuestion = async (word: string) => {
   const response = await AxiosClient.get(`/wallet/generate/question?word=${word}`);
   return response.data.question as string[];
 };
+
+export const accessWalletMnemonic = async (mnemonic: string) => {
+  const response = await AxiosClient.post('/wallet/access/mnemonic', { mnemonic });
+  return response.data as Wallet;
+};
