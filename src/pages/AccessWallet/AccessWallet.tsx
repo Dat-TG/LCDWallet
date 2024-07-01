@@ -5,17 +5,23 @@ import { Button, Typography } from '@mui/material';
 import keystore from '../../assets/keystore.svg';
 import phrase from '../../assets/phrase.svg';
 import privateKey from '../../assets/privateKey.png';
-import { useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import React from 'react';
 import KeystoreDialog from './KeystoreDialog';
 import PhraseDialog from './PhraseDialog';
 import PrivateKeyDialog from './PrivateKeyDialog';
+import { useRecoilState } from 'recoil';
+import WalletState from '@/store/wallet';
 
 function AccessWallet() {
   const navigate = useNavigate();
   const [openKeystoreDialog, setOpenKeystoreDialog] = React.useState(false);
   const [openPhraseDialog, setOpenPhraseDialog] = React.useState(false);
   const [openPrivateKeyDialog, setOpenPrivateKeyDialog] = React.useState(false);
+  const [wallet] = useRecoilState(WalletState);
+  if (wallet) {
+    return <Navigate to="/wallet/dashboard" />;
+  }
   return (
     <>
       <Meta title="Access Your Crypto Wallet on LCDWallet" />

@@ -25,6 +25,8 @@ import { Typography, useMediaQuery } from '@mui/material';
 import { useTheme as useThemeMUI } from '@mui/material';
 import routes from '@/routes';
 import LogoWallet from '@/components/Logo/Logo';
+import WalletState from '@/store/wallet';
+import { useRecoilState } from 'recoil';
 
 function Header() {
   const [, sidebarActions] = useSidebar();
@@ -50,6 +52,7 @@ function Header() {
   const navigate = useNavigate();
   const muiTheme = useThemeMUI();
   const IsMd = useMediaQuery(muiTheme.breakpoints.up('md'));
+  const [wallet] = useRecoilState(WalletState);
 
   return (
     <Box sx={{ flexGrow: 1 }} data-pw={`theme-${theme}`}>
@@ -92,7 +95,14 @@ function Header() {
                     About me
                   </Button>
                   {Object.values(routes)
-                    .filter((route) => route.title)
+                    .filter(
+                      (route) =>
+                        route.title &&
+                        !(
+                          wallet &&
+                          (route.path === '/wallet/create' || route.path === '/wallet/access')
+                        ),
+                    )
                     .map(({ path, title }) => (
                       <Button
                         key={path}

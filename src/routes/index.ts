@@ -27,6 +27,7 @@ const routes: Routes = {
   [Pages.Dashboard]: {
     component: asyncComponentLoader(() => import('@/pages/Dashboard')),
     path: '/wallet/dashboard',
+    title: 'Dashboard',
   },
   [Pages.NotFound]: {
     component: asyncComponentLoader(() => import('@/pages/NotFound')),
