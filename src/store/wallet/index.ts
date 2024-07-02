@@ -1,4 +1,4 @@
-import { atom } from 'recoil';
+import { atom, useSetRecoilState } from 'recoil';
 import { Wallet } from './type';
 import { AtomEffectParams } from '../types';
 
@@ -16,5 +16,16 @@ function synchronizeWithLocalStorage({ setSelf, onSet }: AtomEffectParams) {
   storedWallet && setSelf(JSON.parse(storedWallet));
   onSet((value: Wallet) => localStorage.setItem('wallet', JSON.stringify(value)));
 }
+
+export const useWalletActions = () => {
+  const setWalletState = useSetRecoilState(WalletState);
+
+  const logOut = () => {
+    setWalletState({ privateKey: '', publicKey: '' });
+    localStorage.removeItem('wallet');
+  };
+
+  return { logOut };
+};
 
 export default WalletState;

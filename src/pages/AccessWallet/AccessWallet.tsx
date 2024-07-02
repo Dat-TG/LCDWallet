@@ -19,7 +19,7 @@ function AccessWallet() {
   const [openPhraseDialog, setOpenPhraseDialog] = React.useState(false);
   const [openPrivateKeyDialog, setOpenPrivateKeyDialog] = React.useState(false);
   const [wallet] = useRecoilState(WalletState);
-  if (wallet) {
+  if (wallet.privateKey || wallet.publicKey) {
     return <Navigate to="/wallet/dashboard" />;
   }
   return (

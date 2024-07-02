@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Meta from '@/components/Meta';
-import WalletState from '@/store/wallet';
+import WalletState, { useWalletActions } from '@/store/wallet';
 import { Navigate } from 'react-router-dom';
 import { useRecoilState } from 'recoil';
 import {
@@ -65,6 +65,7 @@ const useStyles = {
 function Dashboard() {
   const classes = useStyles;
   const [wallet] = useRecoilState(WalletState);
+  const { logOut } = useWalletActions();
 
   const [, actions] = useNotifications();
 
@@ -89,6 +90,7 @@ function Dashboard() {
   const handleLogout = () => {
     // Handle the logout logic here
     console.log('User logged out');
+    logOut();
   };
 
   if (!wallet.privateKey || !wallet.publicKey) {
