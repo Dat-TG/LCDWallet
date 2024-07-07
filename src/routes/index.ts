@@ -3,7 +3,7 @@ import HomeIcon from '@mui/icons-material/Home';
 import asyncComponentLoader from '@/utils/loader';
 
 import { Pages, Routes } from './types';
-import { WalletOutlined } from '@mui/icons-material';
+import { Explore, WalletOutlined } from '@mui/icons-material';
 
 const routes: Routes = {
   [Pages.Home]: {
@@ -28,6 +28,12 @@ const routes: Routes = {
     component: asyncComponentLoader(() => import('@/pages/Dashboard')),
     path: '/wallet/dashboard',
     title: 'Dashboard',
+  },
+  [Pages.Explore]: {
+    component: asyncComponentLoader(() => import('@/pages/Explore')),
+    path: '/explore',
+    title: 'Explore',
+    icon: Explore,
   },
   [Pages.NotFound]: {
     component: asyncComponentLoader(() => import('@/pages/NotFound')),

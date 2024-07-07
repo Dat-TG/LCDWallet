@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Meta from '@/components/Meta';
 import WalletState, { useWalletActions } from '@/store/wallet';
 import { Navigate } from 'react-router-dom';
@@ -30,6 +30,9 @@ import {
 } from 'chart.js';
 import useNotifications from '@/store/notifications';
 import TransactionDialog from './TransactionDialog';
+import { getBalance } from '@/api/wallet/apiWallet';
+import { Block } from '@/api/blockchain/type';
+import { getLatestBlocks } from '@/api/blockchain/apiBlockchain';
 
 ChartJS.register(
   ArcElement,
@@ -65,7 +68,7 @@ const useStyles = {
 function Dashboard() {
   const classes = useStyles;
   const [wallet] = useRecoilState(WalletState);
-  const { logOut } = useWalletActions();
+  const { logOut, updateBalance } = useWalletActions();
 
   const [, actions] = useNotifications();
 
@@ -93,6 +96,21 @@ function Dashboard() {
     logOut();
   };
 
+  const [latestBlocks, setLatestBlocks] = useState<Block[]>([]);
+
+  useEffect(() => {
+    // Fetch latest blocks, transactions, and balance here
+    getBalance(wallet.publicKey).then((balance) => {
+      console.log('Balance:', balance);
+      updateBalance(balance);
+    });
+    getLatestBlocks().then((blocks) => {
+      console.log('Latest blocks:', blocks);
+      setLatestBlocks(blocks);
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   if (!wallet.privateKey || !wallet.publicKey) {
     return <Navigate to="/wallet/access" />;
   }
@@ -102,14 +120,6 @@ function Dashboard() {
     { date: '2024-06-05', type: 'Sent', amount: 0.5 },
     { date: '2024-06-10', type: 'Received', amount: 2.0 },
   ];
-
-  const latestBlocks = [
-    { height: 1001, hash: '0x1234...', time: '2024-06-30 10:00' },
-    { height: 1000, hash: '0x5678...', time: '2024-06-30 09:50' },
-    { height: 999, hash: '0x9abc...', time: '2024-06-30 09:40' },
-  ];
-
-  const balance = 5.0; // Sample balance
 
   const transactionData = {
     labels: ['Received', 'Sent'],
@@ -198,7 +208,7 @@ function Dashboard() {
                 <Typography variant="h6" component="h2">
                   Balance
                 </Typography>
-                <Typography color="textSecondary">Balance: {balance} LCD</Typography>
+                <Typography color="textSecondary">Balance: {wallet.balance} LCD</Typography>
               </CardContent>
             </Card>
           </Grid>
@@ -219,9 +229,30 @@ function Dashboard() {
                   <TableBody>
                     {latestBlocks.map((block, index) => (
                       <TableRow key={index}>
-                        <TableCell>{block.height}</TableCell>
-                        <TableCell>{block.hash}</TableCell>
-                        <TableCell>{block.time}</TableCell>
+                        <TableCell>{block.index}</TableCell>
+                        <TableCell
+                          sx={{
+                            maxWidth: '80px',
+                          }}
+                        >
+                          <Typography
+                            sx={{
+                              overflow: 'hidden',
+                              whiteSpace: 'nowrap',
+                              textOverflow: 'ellipsis',
+                              ':hover': {
+                                cursor: 'pointer',
+                              },
+                            }}
+                            onClick={() => {
+                              navigator.clipboard.writeText(block.hash);
+                              actions.push({ message: 'Hash copied to clipboard' });
+                            }}
+                          >
+                            {block.hash}
+                          </Typography>
+                        </TableCell>
+                        <TableCell>{new Date(block.timestamp).toLocaleString()}</TableCell>
                       </TableRow>
                     ))}
                   </TableBody>

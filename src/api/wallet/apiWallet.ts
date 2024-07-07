@@ -32,3 +32,8 @@ export const accessWalletPrivateKey = async (privateKey: string) => {
   const response = await AxiosClient.post('/wallet/access/privatekey', { privateKey });
   return response.data.publicKey as string;
 };
+
+export const getBalance = async (address: string) => {
+  const response = await AxiosClient.get(`/wallet/balance?address=${address}`);
+  return response.data.balance as number;
+};
