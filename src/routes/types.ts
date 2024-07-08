@@ -10,6 +10,7 @@ enum Pages {
   AccessWallet,
   Dashboard,
   Explore,
+  Faucet,
 }
 
 type PathRouteCustomProps = {

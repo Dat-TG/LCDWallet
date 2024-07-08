@@ -35,6 +35,11 @@ const routes: Routes = {
     title: 'Explore',
     icon: Explore,
   },
+  [Pages.Faucet]: {
+    component: asyncComponentLoader(() => import('@/pages/Faucet')),
+    path: '/faucet',
+    title: 'Faucet',
+  },
   [Pages.NotFound]: {
     component: asyncComponentLoader(() => import('@/pages/NotFound')),
     path: '*',
