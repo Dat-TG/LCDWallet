@@ -68,7 +68,7 @@ const useStyles = {
 function Dashboard() {
   const classes = useStyles;
   const [wallet] = useRecoilState(WalletState);
-  const { logOut, updateBalance } = useWalletActions();
+  const { logOut } = useWalletActions();
 
   const [, actions] = useNotifications();
 
@@ -98,11 +98,13 @@ function Dashboard() {
 
   const [latestBlocks, setLatestBlocks] = useState<Block[]>([]);
 
+  const [balance, setBalance] = useState(0);
+
   useEffect(() => {
     // Fetch latest blocks, transactions, and balance here
     getBalance(wallet.publicKey).then((balance) => {
       console.log('Balance:', balance);
-      updateBalance(balance);
+      setBalance(balance);
     });
     getLatestBlocks().then((blocks) => {
       console.log('Latest blocks:', blocks);
@@ -208,7 +210,7 @@ function Dashboard() {
                 <Typography variant="h6" component="h2">
                   Balance
                 </Typography>
-                <Typography color="textSecondary">Balance: {wallet.balance} LCD</Typography>
+                <Typography color="textSecondary">Balance: {balance} LCD</Typography>
               </CardContent>
             </Card>
           </Grid>

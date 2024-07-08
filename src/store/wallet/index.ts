@@ -7,7 +7,6 @@ const WalletState = atom<Wallet>({
   default: {
     privateKey: '',
     publicKey: '',
-    balance: 1,
   },
   effects_UNSTABLE: [synchronizeWithLocalStorage],
 });
@@ -22,15 +21,11 @@ export const useWalletActions = () => {
   const setWalletState = useSetRecoilState(WalletState);
 
   const logOut = () => {
-    setWalletState({ privateKey: '', publicKey: '', balance: 0 });
+    setWalletState({ privateKey: '', publicKey: '' });
     localStorage.removeItem('wallet');
   };
 
-  const updateBalance = (balance: number) => {
-    setWalletState((prev) => ({ ...prev, balance }));
-  };
-
-  return { logOut, updateBalance };
+  return { logOut };
 };
 
 export default WalletState;
