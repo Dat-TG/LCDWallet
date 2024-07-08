@@ -2,12 +2,20 @@ import React from 'react';
 import { Container, Typography, TextField, Button, Grid, Card, CardContent } from '@mui/material';
 import { useRecoilState } from 'recoil';
 import WalletState from '@/store/wallet';
+import { requestFaucet } from '@/api/blockchain/apiBlockchain';
+import useNotifications from '@/store/notifications';
 
 const Faucet: React.FC = () => {
+  const [, actions] = useNotifications();
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     // Implement faucet submission logic here
     alert('LCD tokens will be sent to the provided address!');
+    requestFaucet(event.currentTarget.address.value).then((message) => {
+      actions.push({
+        message,
+      });
+    });
   };
 
   const [wallet] = useRecoilState(WalletState);
