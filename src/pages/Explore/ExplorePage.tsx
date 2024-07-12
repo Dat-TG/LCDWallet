@@ -58,7 +58,7 @@ const ExplorePage: React.FC = () => {
   const [, actions] = useNotifications();
   const handleClose = () => setIsModalOpen(false);
   const handleRegister = async (value: number) => {
-    registerValidator(wallet.publicKey, value)
+    registerValidator(wallet.privateKey, value)
       .then((data) => {
         actions.push({ message: data.message, options: { variant: 'success' } });
         setStake(data.stake);
@@ -79,12 +79,12 @@ const ExplorePage: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    isValidatorRegistered(wallet.publicKey).then((stake) => {
+    isValidatorRegistered(wallet.privateKey).then((stake) => {
       if (stake > 0) {
         setStake(stake);
       }
     });
-  }, [wallet.publicKey]);
+  }, [wallet.privateKey]);
 
   return (
     <>
@@ -191,7 +191,7 @@ const ExplorePage: React.FC = () => {
       <ValidatorRegisterModal
         open={isModalOpen}
         handleClose={handleClose}
-        publicKey={wallet.publicKey}
+        privateKey={wallet.privateKey}
         stake={stake}
         handleRegister={handleRegister}
       />

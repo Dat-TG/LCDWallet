@@ -12,13 +12,13 @@ import { useState } from 'react';
 export default function ValidatorRegisterModal({
   open,
   handleClose,
-  publicKey,
+  privateKey,
   stake,
   handleRegister,
 }: {
   open: boolean;
   handleClose: () => void;
-  publicKey: string;
+  privateKey: string;
   stake: number;
   handleRegister: (value: number) => Promise<void>;
 }) {
@@ -33,11 +33,11 @@ export default function ValidatorRegisterModal({
         <TextField
           autoFocus
           margin="dense"
-          id="publicKey"
-          label="Public Key"
+          id="privateKey"
+          label="Private Key"
           type="text"
           fullWidth
-          value={publicKey}
+          value={privateKey}
           disabled
         />
         <TextField

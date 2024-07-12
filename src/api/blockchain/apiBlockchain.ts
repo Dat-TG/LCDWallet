@@ -11,15 +11,15 @@ export const requestFaucet = async (address: string) => {
   return response.data.message as string;
 };
 
-export const registerValidator = async (publicKey: string, stake: number) => {
-  const response = await AxiosClient.post('/blocks/register', { publicKey, stake });
+export const registerValidator = async (privateKey: string, stake: number) => {
+  const response = await AxiosClient.post('/blocks/register', { privateKey, stake });
   return response.data as {
     stake: number;
     message: string;
   };
 };
 
-export const isValidatorRegistered = async (publicKey: string) => {
-  const response = await AxiosClient.get(`/blocks/registered/${publicKey}`);
+export const isValidatorRegistered = async (privateKey: string) => {
+  const response = await AxiosClient.get(`/blocks/registered/${privateKey}`);
   return response.data.stake as number;
 };
