@@ -40,6 +40,7 @@ import { getBalance, getTransactionHistory, sendTransaction } from '@/api/wallet
 import { Block } from '@/api/blockchain/type';
 import { getLatestBlocks } from '@/api/blockchain/apiBlockchain';
 import { TransactionDetails } from '@/api/wallet/type';
+import Loading from '@/components/Loading';
 
 ChartJS.register(
   ArcElement,
@@ -132,6 +133,9 @@ function Dashboard() {
 
   const [balance, setBalance] = useState(0);
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [transactionData, setTransactionData] = useState<any>();
+
   useEffect(() => {
     // Fetch latest blocks, transactions, and balance here
     getBalance(wallet.publicKey).then((balance) => {
@@ -145,24 +149,37 @@ function Dashboard() {
     getTransactionHistory(wallet.publicKey).then((transactions) => {
       console.log('Transaction history:', transactions);
       setTransactions(transactions);
+      // Get total sent and received transactions
+      let totalReceived = 0;
+      let totalSent = 0;
+
+      transactions.forEach((transaction) => {
+        if (transaction.toAddress === wallet.publicKey) {
+          totalReceived += transaction.amount;
+        }
+        if (transaction.fromAddress === wallet.publicKey) {
+          totalSent += transaction.amount;
+        }
+      });
+      console.log('Total received:', totalReceived);
+      console.log('Total sent:', totalSent);
+      const transactionDataTemp = {
+        labels: ['Received', 'Sent'],
+        datasets: [
+          {
+            data: [totalReceived, totalSent], // Example data: 3.5 LCD received, 0.5 LCD sent
+            backgroundColor: ['#36A2EB', '#FF6384'],
+            hoverBackgroundColor: ['#36A2EB', '#FF6384'],
+          },
+        ],
+      };
+      setTransactionData(transactionDataTemp);
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [address, wallet.publicKey]);
 
   if (!wallet.privateKey || !wallet.publicKey) {
     return <Navigate to="/wallet/access" />;
   }
-
-  const transactionData = {
-    labels: ['Received', 'Sent'],
-    datasets: [
-      {
-        data: [3.5, 0.5], // Example data: 3.5 LCD received, 0.5 LCD sent
-        backgroundColor: ['#36A2EB', '#FF6384'],
-        hoverBackgroundColor: ['#36A2EB', '#FF6384'],
-      },
-    ],
-  };
 
   return (
     <>
@@ -299,7 +316,7 @@ function Dashboard() {
                   Transaction Types
                 </Typography>
                 <div style={classes.doughnutContainer}>
-                  <Doughnut data={transactionData} />
+                  {transactionData ? <Doughnut data={transactionData} /> : <Loading />}
                 </div>
               </CardContent>
             </Card>
