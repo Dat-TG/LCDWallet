@@ -11,6 +11,11 @@ import {
   Button,
 } from '@mui/material';
 import Meta from '@/components/Meta';
+import { isValidatorRegistered, registerValidator } from '@/api/blockchain/apiBlockchain';
+import { useRecoilState } from 'recoil';
+import WalletState from '@/store/wallet';
+import useNotifications from '@/store/notifications';
+import ValidatorRegisterModal from './ValidatorRegisterForm';
 
 interface Transaction {
   id: string;
@@ -47,6 +52,21 @@ const fetchMiningStats = async (): Promise<MiningStats> => {
 const ExplorePage: React.FC = () => {
   const [transactionPool, setTransactionPool] = useState<Transaction[]>([]);
   const [miningStats, setMiningStats] = useState<MiningStats | null>(null);
+  const [stake, setStake] = useState<number>(0);
+  const [wallet] = useRecoilState(WalletState);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [, actions] = useNotifications();
+  const handleClose = () => setIsModalOpen(false);
+  const handleRegister = async (value: number) => {
+    registerValidator(wallet.publicKey, value)
+      .then((data) => {
+        actions.push({ message: data.message, options: { variant: 'success' } });
+        setStake(data.stake);
+      })
+      .catch((error) => {
+        actions.push({ message: error.message, options: { variant: 'error' } });
+      });
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -57,6 +77,14 @@ const ExplorePage: React.FC = () => {
     };
     fetchData();
   }, []);
+
+  useEffect(() => {
+    isValidatorRegistered(wallet.publicKey).then((stake) => {
+      if (stake > 0) {
+        setStake(stake);
+      }
+    });
+  }, [wallet.publicKey]);
 
   return (
     <>
@@ -70,6 +98,46 @@ const ExplorePage: React.FC = () => {
           Explore Dashboard
         </Typography>
         <Grid container spacing={3}>
+          <Grid item xs={12}>
+            <Card>
+              <CardContent>
+                <Typography variant="h6" gutterBottom>
+                  Validator Status
+                </Typography>
+                {stake > 0 ? (
+                  <>
+                    <Typography variant="body2" color="textSecondary" component="p">
+                      You are a registered validator with a stake of {stake} LCD.
+                    </Typography>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      style={{ marginTop: 16 }}
+                      onClick={() => setIsModalOpen(true)}
+                    >
+                      Change Stake
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <Typography variant="body2" color="textSecondary" component="p">
+                      You are not a registered validator.
+                    </Typography>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      style={{ marginTop: 16 }}
+                      onClick={() => {
+                        setIsModalOpen(true);
+                      }}
+                    >
+                      Register as Validator
+                    </Button>
+                  </>
+                )}
+              </CardContent>
+            </Card>
+          </Grid>
           <Grid item xs={12}>
             <Card>
               <CardContent>
@@ -120,6 +188,13 @@ const ExplorePage: React.FC = () => {
           </Grid>
         </Grid>
       </Container>
+      <ValidatorRegisterModal
+        open={isModalOpen}
+        handleClose={handleClose}
+        publicKey={wallet.publicKey}
+        stake={stake}
+        handleRegister={handleRegister}
+      />
     </>
   );
 };
