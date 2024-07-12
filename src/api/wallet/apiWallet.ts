@@ -1,6 +1,10 @@
 import { Keystore } from '@/store/keystore/type';
 import AxiosClient from '../client';
-import { AccessWalletKeystoreRequest, CreateWalletKeystoreRequest } from './type';
+import {
+  AccessWalletKeystoreRequest,
+  CreateWalletKeystoreRequest,
+  TransactionDetails,
+} from './type';
 import { Wallet } from '@/store/wallet/type';
 
 export const createWalletKeystore = async (data: CreateWalletKeystoreRequest) => {
@@ -51,4 +55,9 @@ export const sendTransaction = async (
     privateKey,
   });
   return response.data as string;
+};
+
+export const getTransactionHistory = async (address: string) => {
+  const response = await AxiosClient.get(`/transactions/history/${address}`);
+  return response.data as TransactionDetails[];
 };

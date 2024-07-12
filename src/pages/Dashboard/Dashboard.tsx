@@ -15,6 +15,12 @@ import {
   TableHead,
   TableRow,
   Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Box,
 } from '@mui/material';
 import { Doughnut } from 'react-chartjs-2';
 import {
@@ -30,9 +36,10 @@ import {
 } from 'chart.js';
 import useNotifications from '@/store/notifications';
 import TransactionDialog from './TransactionDialog';
-import { getBalance, sendTransaction } from '@/api/wallet/apiWallet';
+import { getBalance, getTransactionHistory, sendTransaction } from '@/api/wallet/apiWallet';
 import { Block } from '@/api/blockchain/type';
 import { getLatestBlocks } from '@/api/blockchain/apiBlockchain';
+import { TransactionDetails } from '@/api/wallet/type';
 
 ChartJS.register(
   ArcElement,
@@ -51,10 +58,16 @@ const useStyles = {
     padding: '24px',
   },
   card: {
-    margin: '16px',
+    margin: 2,
   },
   table: {
     minWidth: 650,
+  },
+  tableCell: {
+    whiteSpace: 'nowrap' as const,
+    overflow: 'hidden' as const,
+    textOverflow: 'ellipsis' as const,
+    maxWidth: 150,
   },
   doughnutContainer: {
     margin: '0 auto',
@@ -75,6 +88,19 @@ function Dashboard() {
   const [open, setOpen] = useState(false);
   const [address, setAddress] = useState('');
   const [amount, setAmount] = useState('');
+  const [transactions, setTransactions] = useState<TransactionDetails[]>([]);
+  const [selectedTransaction, setSelectedTransaction] = useState<TransactionDetails | null>(null);
+  const [openTransaction, setOpenTransaction] = useState(false);
+
+  const handleRowClick = (transaction: TransactionDetails) => {
+    setSelectedTransaction(transaction);
+    setOpenTransaction(true);
+  };
+
+  const handleRowClose = () => {
+    setOpenTransaction(false);
+    setSelectedTransaction(null);
+  };
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -116,18 +142,16 @@ function Dashboard() {
       console.log('Latest blocks:', blocks);
       setLatestBlocks(blocks);
     });
+    getTransactionHistory(wallet.publicKey).then((transactions) => {
+      console.log('Transaction history:', transactions);
+      setTransactions(transactions);
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (!wallet.privateKey || !wallet.publicKey) {
     return <Navigate to="/wallet/access" />;
   }
-
-  const transactions = [
-    { date: '2024-06-01', type: 'Received', amount: 1.5 },
-    { date: '2024-06-05', type: 'Sent', amount: 0.5 },
-    { date: '2024-06-10', type: 'Received', amount: 2.0 },
-  ];
 
   const transactionData = {
     labels: ['Received', 'Sent'],
@@ -292,15 +316,30 @@ function Dashboard() {
                       <TableCell>Date</TableCell>
                       <TableCell>Type</TableCell>
                       <TableCell>Amount</TableCell>
+                      <TableCell>Status</TableCell>
+                      <TableCell>ID</TableCell>
+                      <TableCell>From</TableCell>
+                      <TableCell>To</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
                     {transactions.map((transaction, index) => (
-                      <TableRow key={index}>
-                        <TableCell>{transaction.date}</TableCell>
-                        <TableCell>{transaction.type}</TableCell>
-                        <TableCell>{transaction.amount} LCD</TableCell>
-                      </TableRow>
+                      <Box
+                        component="tr"
+                        key={index}
+                        onClick={() => handleRowClick(transaction)}
+                        style={{ cursor: 'pointer' }}
+                      >
+                        <TableCell style={classes.tableCell}>
+                          {new Date(transaction.timestamp).toLocaleString()}
+                        </TableCell>
+                        <TableCell style={classes.tableCell}>{transaction.id}</TableCell>
+                        <TableCell style={classes.tableCell}>{transaction.amount} LCD</TableCell>
+                        <TableCell style={classes.tableCell}>{transaction.status}</TableCell>
+                        <TableCell style={classes.tableCell}>{transaction.id}</TableCell>
+                        <TableCell style={classes.tableCell}>{transaction.fromAddress}</TableCell>
+                        <TableCell style={classes.tableCell}>{transaction.toAddress}</TableCell>
+                      </Box>
                     ))}
                   </TableBody>
                 </Table>
@@ -318,6 +357,42 @@ function Dashboard() {
         amount={amount}
         setAmount={setAmount}
       />
+      <Dialog
+        open={openTransaction}
+        onClose={handleRowClose}
+        aria-labelledby="transaction-dialog-title"
+      >
+        <DialogTitle id="transaction-dialog-title">Transaction Details</DialogTitle>
+        <DialogContent>
+          {selectedTransaction && (
+            <>
+              <DialogContentText>
+                <strong>ID:</strong> {selectedTransaction.id}
+              </DialogContentText>
+              <DialogContentText>
+                <strong>Status:</strong> {selectedTransaction.status}
+              </DialogContentText>
+              <DialogContentText>
+                <strong>From:</strong> {selectedTransaction.fromAddress}
+              </DialogContentText>
+              <DialogContentText>
+                <strong>To:</strong> {selectedTransaction.toAddress}
+              </DialogContentText>
+              <DialogContentText>
+                <strong>Amount:</strong> {selectedTransaction.amount} LCD
+              </DialogContentText>
+              <DialogContentText>
+                <strong>Date:</strong> {new Date(selectedTransaction.timestamp).toLocaleString()}
+              </DialogContentText>
+            </>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleRowClose} color="primary">
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 }

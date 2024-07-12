@@ -9,4 +9,14 @@ interface AccessWalletKeystoreRequest {
   password: string;
 }
 
-export type { CreateWalletKeystoreRequest, AccessWalletKeystoreRequest };
+// Define the TransactionDetails type
+interface TransactionDetails {
+  status: string;
+  id: string;
+  fromAddress: string;
+  toAddress: string;
+  amount: number;
+  timestamp: number;
+}
+
+export type { CreateWalletKeystoreRequest, AccessWalletKeystoreRequest, TransactionDetails };
