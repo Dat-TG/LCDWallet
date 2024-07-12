@@ -37,3 +37,18 @@ export const getBalance = async (address: string) => {
   const response = await AxiosClient.get(`/wallet/balance?address=${address}`);
   return response.data.balance as number;
 };
+
+export const sendTransaction = async (
+  fromAddress: string,
+  toAddress: string,
+  amount: number,
+  privateKey: string,
+) => {
+  const response = await AxiosClient.post('/transactions/send', {
+    fromAddress,
+    toAddress,
+    amount,
+    privateKey,
+  });
+  return response.data as string;
+};

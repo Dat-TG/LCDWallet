@@ -30,7 +30,7 @@ import {
 } from 'chart.js';
 import useNotifications from '@/store/notifications';
 import TransactionDialog from './TransactionDialog';
-import { getBalance } from '@/api/wallet/apiWallet';
+import { getBalance, sendTransaction } from '@/api/wallet/apiWallet';
 import { Block } from '@/api/blockchain/type';
 import { getLatestBlocks } from '@/api/blockchain/apiBlockchain';
 
@@ -87,6 +87,12 @@ function Dashboard() {
   const handleTransaction = () => {
     // Handle the transaction logic here
     console.log('Transaction made to', address, 'of amount', amount);
+    sendTransaction(wallet.publicKey, address, parseFloat(amount), wallet.privateKey).then(
+      (transaction) => {
+        console.log('Transaction:', transaction);
+        actions.push({ message: 'Transaction successful', options: { variant: 'success' } });
+      },
+    );
     setOpen(false);
   };
 
