@@ -197,10 +197,9 @@ function Dashboard() {
           break;
 
         case 'BALANCE_UPDATE':
-          // setBalances((prevBalances) => ({
-          //   ...prevBalances,
-          //   [message.address]: message.balance,
-          // }));
+          if (message.address === wallet.publicKey) {
+            setBalance(message.balance);
+          }
           break;
 
         default:
@@ -215,7 +214,7 @@ function Dashboard() {
     return () => {
       ws.close();
     };
-  }, []);
+  }, [wallet.publicKey]);
 
   if (!wallet.privateKey || !wallet.publicKey) {
     return <Navigate to="/wallet/access" />;
