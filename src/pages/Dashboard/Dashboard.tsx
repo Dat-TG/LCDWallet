@@ -398,7 +398,6 @@ function Dashboard() {
                   <TableHead>
                     <TableRow>
                       <TableCell>Date</TableCell>
-                      <TableCell>Type</TableCell>
                       <TableCell>Amount</TableCell>
                       <TableCell>Status</TableCell>
                       <TableCell>ID</TableCell>
@@ -417,7 +416,6 @@ function Dashboard() {
                         <TableCell style={classes.tableCell}>
                           {new Date(transaction.timestamp).toLocaleString()}
                         </TableCell>
-                        <TableCell style={classes.tableCell}>{transaction.id}</TableCell>
                         <TableCell style={classes.tableCell}>{transaction.amount} LCD</TableCell>
                         <TableCell style={classes.tableCell}>{transaction.status}</TableCell>
                         <TableCell style={classes.tableCell}>{transaction.id}</TableCell>
