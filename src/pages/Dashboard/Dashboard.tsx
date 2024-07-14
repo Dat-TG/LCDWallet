@@ -177,6 +177,46 @@ function Dashboard() {
     });
   }, [address, wallet.publicKey]);
 
+  useEffect(() => {
+    const ws = new WebSocket('ws://localhost:3000');
+
+    ws.onopen = () => {
+      console.log('Connected to WebSocket server');
+    };
+
+    ws.onmessage = (event) => {
+      const message = JSON.parse(event.data);
+
+      switch (message.type) {
+        case 'NEW_BLOCK':
+          setLatestBlocks((prevBlocks) => [message.block, ...prevBlocks].slice(0, 5));
+          break;
+
+        case 'NEW_TRANSACTION':
+          // setTransactions((prevTransactions) => [...prevTransactions, message.transaction]);
+          break;
+
+        case 'BALANCE_UPDATE':
+          // setBalances((prevBalances) => ({
+          //   ...prevBalances,
+          //   [message.address]: message.balance,
+          // }));
+          break;
+
+        default:
+          console.log('Unknown message type:', message.type);
+      }
+    };
+
+    ws.onclose = () => {
+      console.log('Disconnected from WebSocket server');
+    };
+
+    return () => {
+      ws.close();
+    };
+  }, []);
+
   if (!wallet.privateKey || !wallet.publicKey) {
     return <Navigate to="/wallet/access" />;
   }
