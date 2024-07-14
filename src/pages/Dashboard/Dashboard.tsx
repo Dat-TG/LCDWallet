@@ -192,8 +192,36 @@ function Dashboard() {
           setLatestBlocks((prevBlocks) => [message.block, ...prevBlocks].slice(0, 5));
           break;
 
-        case 'NEW_TRANSACTION':
-          // setTransactions((prevTransactions) => [...prevTransactions, message.transaction]);
+        case 'TRANSACTION_HISTORY':
+          if (message.address === wallet.publicKey) {
+            const transactions = message.transactions as TransactionDetails[];
+            setTransactions(message.transactions);
+            // Get total sent and received transactions
+            let totalReceived = 0;
+            let totalSent = 0;
+
+            transactions.forEach((transaction) => {
+              if (transaction.toAddress === wallet.publicKey) {
+                totalReceived += transaction.amount;
+              }
+              if (transaction.fromAddress === wallet.publicKey) {
+                totalSent += transaction.amount;
+              }
+            });
+            console.log('Total received:', totalReceived);
+            console.log('Total sent:', totalSent);
+            const transactionDataTemp = {
+              labels: ['Received', 'Sent'],
+              datasets: [
+                {
+                  data: [totalReceived, totalSent], // Example data: 3.5 LCD received, 0.5 LCD sent
+                  backgroundColor: ['#36A2EB', '#FF6384'],
+                  hoverBackgroundColor: ['#36A2EB', '#FF6384'],
+                },
+              ],
+            };
+            setTransactionData(transactionDataTemp);
+          }
           break;
 
         case 'BALANCE_UPDATE':
