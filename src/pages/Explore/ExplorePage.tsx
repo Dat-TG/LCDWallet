@@ -13,6 +13,7 @@ import {
 import Meta from '@/components/Meta';
 import {
   getMiningStats,
+  getTransactionPool,
   isValidatorRegistered,
   registerValidator,
 } from '@/api/blockchain/apiBlockchain';
@@ -21,27 +22,16 @@ import WalletState from '@/store/wallet';
 import useNotifications from '@/store/notifications';
 import ValidatorRegisterModal from './ValidatorRegisterForm';
 import { Navigate } from 'react-router-dom';
-
-interface Transaction {
-  id: string;
-  from: string;
-  to: string;
-  amount: number;
-  timestamp: string;
-}
+import { TransactionDetails } from '@/api/wallet/type';
 
 interface MiningStats {
   minedBlocks: number;
   rewards: number;
 }
 
-const fetchTransactionPool = async (): Promise<Transaction[]> => {
-  // Simulate fetching transaction pool data
-  return [
-    { id: '1', from: 'Alice', to: 'Bob', amount: 50, timestamp: '2024-07-01T12:00:00Z' },
-    { id: '2', from: 'Charlie', to: 'Dave', amount: 30, timestamp: '2024-07-01T12:05:00Z' },
-    // Add more transactions as needed
-  ];
+const fetchTransactionPool = async (): Promise<TransactionDetails[]> => {
+  const transactions = await getTransactionPool();
+  return transactions;
 };
 
 const fetchMiningStats = async (address: string): Promise<MiningStats> => {
@@ -50,7 +40,7 @@ const fetchMiningStats = async (address: string): Promise<MiningStats> => {
 };
 
 const ExplorePage: React.FC = () => {
-  const [transactionPool, setTransactionPool] = useState<Transaction[]>([]);
+  const [transactionPool, setTransactionPool] = useState<TransactionDetails[]>([]);
   const [miningStats, setMiningStats] = useState<MiningStats | null>(null);
   const [stake, setStake] = useState<number>(0);
   const [wallet] = useRecoilState(WalletState);
@@ -84,6 +74,30 @@ const ExplorePage: React.FC = () => {
       setStake(stake);
     });
   }, [wallet.privateKey]);
+
+  useEffect(() => {
+    const ws = new WebSocket('ws://localhost:3000');
+    ws.onmessage = (event) => {
+      const message = JSON.parse(event.data);
+
+      switch (message.type) {
+        case 'TRANSACTION_POOL':
+          setTransactionPool(message.transactionPool);
+          break;
+        case 'MINING_STATS':
+          if (message.address === wallet.publicKey) {
+            setMiningStats(message.miningStats);
+          }
+          break;
+        default:
+          console.log('Unknown message type:', message.type);
+      }
+    };
+    ws.onclose = () => {
+      console.log('Disconnected from WebSocket server');
+    };
+    return () => ws.close();
+  }, [wallet.publicKey]);
 
   if (!wallet.privateKey || !wallet.publicKey) {
     return <Navigate to="/wallet/access" />;
@@ -148,14 +162,51 @@ const ExplorePage: React.FC = () => {
                   Transaction Pool
                 </Typography>
                 <List>
-                  {transactionPool.map((transaction) => (
-                    <ListItem key={transaction.id}>
-                      <ListItemText
-                        primary={`From: ${transaction.from} To: ${transaction.to} Amount: ${transaction.amount}`}
-                        secondary={`Timestamp: ${new Date(transaction.timestamp).toLocaleString()}`}
-                      />
-                    </ListItem>
-                  ))}
+                  {transactionPool.length > 0 ? (
+                    transactionPool.map((transaction) => (
+                      <ListItem
+                        key={transaction.id}
+                        sx={{
+                          display: 'flex',
+                          flexDirection: 'column',
+                          alignItems: 'flex-start',
+                          padding: 2,
+                          margin: 1,
+                          border: '1px solid #ccc',
+                          borderRadius: 4,
+                        }}
+                      >
+                        <ListItemText
+                          primary={`From: ${transaction.fromAddress}`}
+                          sx={{
+                            wordWrap: 'break-word',
+                            maxWidth: '100%',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            whiteSpace: 'nowrap',
+                          }}
+                        />
+                        <ListItemText
+                          primary={`To: ${transaction.toAddress}`}
+                          sx={{
+                            wordWrap: 'break-word',
+                            maxWidth: '100%',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            whiteSpace: 'nowrap',
+                          }}
+                        />
+                        <ListItemText primary={`Amount: ${transaction.amount} LCD`} />
+                        <ListItemText
+                          primary={`Time: ${new Date(transaction.timestamp).toLocaleString()}`}
+                        />
+                      </ListItem>
+                    ))
+                  ) : (
+                    <Typography variant="body2" color="textSecondary" component="p">
+                      No transactions in the pool.
+                    </Typography>
+                  )}
                 </List>
               </CardContent>
             </Card>

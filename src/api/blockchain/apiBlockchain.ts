@@ -1,4 +1,5 @@
 import AxiosClient from '../client';
+import { TransactionDetails } from '../wallet/type';
 import { Block } from './type';
 
 export const getLatestBlocks = async () => {
@@ -30,4 +31,9 @@ export const getMiningStats = async (address: string) => {
     minedBlocks: number;
     rewards: number;
   };
+};
+
+export const getTransactionPool = async () => {
+  const response = await AxiosClient.get('/transactions/pool');
+  return response.data as TransactionDetails[];
 };
