@@ -6,13 +6,19 @@ import keystore from '../../assets/keystore.svg';
 import phrase from '../../assets/phrase.svg';
 import { useState } from 'react';
 import KeystoreDialog from './KeystoreDialog';
-import { useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import PhraseDialog from './PhraseDialog';
+import { useRecoilState } from 'recoil';
+import WalletState from '@/store/wallet';
 
 function CreateWallet() {
   const [openKeystore, setOpenKeystore] = useState(false);
   const [openPhrase, setOpenPhrase] = useState(false);
   const navigate = useNavigate();
+  const [wallet] = useRecoilState(WalletState);
+  if (wallet.privateKey || wallet.publicKey) {
+    return <Navigate to="/wallet/dashboard" />;
+  }
   return (
     <>
       <Meta title="Create A Crypto Wallet" />

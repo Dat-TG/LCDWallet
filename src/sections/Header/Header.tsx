@@ -99,8 +99,12 @@ function Header() {
                       (route) =>
                         route.title &&
                         !(
-                          wallet &&
+                          wallet.privateKey &&
                           (route.path === '/wallet/create' || route.path === '/wallet/access')
+                        ) &&
+                        !(
+                          (route.path === '/explore' || route.path === '/wallet/dashboard') &&
+                          !wallet.privateKey
                         ),
                     )
                     .map(({ path, title }) => (

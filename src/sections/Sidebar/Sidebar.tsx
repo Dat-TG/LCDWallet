@@ -12,9 +12,12 @@ import routes from '@/routes';
 import useSidebar from '@/store/sidebar';
 import { authorWebsite } from '@/config';
 import { InfoOutlined } from '@mui/icons-material';
+import { useRecoilState } from 'recoil';
+import WalletState from '@/store/wallet';
 
 function Sidebar() {
   const [isSidebarOpen, sidebarActions] = useSidebar();
+  const [wallet] = useRecoilState(WalletState);
 
   return (
     <SwipeableDrawer
@@ -68,7 +71,18 @@ function Sidebar() {
           </ListItemButton>
         </ListItem>
         {Object.values(routes)
-          .filter((route) => route.title)
+          .filter(
+            (route) =>
+              route.title &&
+              !(
+                wallet.privateKey &&
+                (route.path === '/wallet/create' || route.path === '/wallet/access')
+              ) &&
+              !(
+                (route.path === '/explore' || route.path === '/wallet/dashboard') &&
+                !wallet.privateKey
+              ),
+          )
           .map(({ path, title, icon: Icon }) => (
             <ListItem sx={{ p: 0 }} key={path}>
               <ListItemButton

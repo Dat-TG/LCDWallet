@@ -16,6 +16,7 @@ import { useRecoilState } from 'recoil';
 import WalletState from '@/store/wallet';
 import useNotifications from '@/store/notifications';
 import ValidatorRegisterModal from './ValidatorRegisterForm';
+import { Navigate } from 'react-router-dom';
 
 interface Transaction {
   id: string;
@@ -84,6 +85,10 @@ const ExplorePage: React.FC = () => {
       setStake(stake);
     });
   }, [wallet.privateKey]);
+
+  if (!wallet.privateKey || !wallet.publicKey) {
+    return <Navigate to="/wallet/access" />;
+  }
 
   return (
     <>
