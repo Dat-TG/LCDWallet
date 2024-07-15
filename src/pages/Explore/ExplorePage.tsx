@@ -11,7 +11,11 @@ import {
   Button,
 } from '@mui/material';
 import Meta from '@/components/Meta';
-import { isValidatorRegistered, registerValidator } from '@/api/blockchain/apiBlockchain';
+import {
+  getMiningStats,
+  isValidatorRegistered,
+  registerValidator,
+} from '@/api/blockchain/apiBlockchain';
 import { useRecoilState } from 'recoil';
 import WalletState from '@/store/wallet';
 import useNotifications from '@/store/notifications';
@@ -27,9 +31,8 @@ interface Transaction {
 }
 
 interface MiningStats {
-  totalBlocks: number;
-  totalRewards: number;
-  hashRate: number;
+  minedBlocks: number;
+  rewards: number;
 }
 
 const fetchTransactionPool = async (): Promise<Transaction[]> => {
@@ -41,13 +44,9 @@ const fetchTransactionPool = async (): Promise<Transaction[]> => {
   ];
 };
 
-const fetchMiningStats = async (): Promise<MiningStats> => {
-  // Simulate fetching mining statistics
-  return {
-    totalBlocks: 1200,
-    totalRewards: 15000,
-    hashRate: 3000,
-  };
+const fetchMiningStats = async (address: string): Promise<MiningStats> => {
+  const stats = await getMiningStats(address);
+  return stats;
 };
 
 const ExplorePage: React.FC = () => {
@@ -74,11 +73,11 @@ const ExplorePage: React.FC = () => {
     const fetchData = async () => {
       const transactions = await fetchTransactionPool();
       setTransactionPool(transactions);
-      const stats = await fetchMiningStats();
+      const stats = await fetchMiningStats(wallet.publicKey);
       setMiningStats(stats);
     };
     fetchData();
-  }, []);
+  }, [wallet.publicKey]);
 
   useEffect(() => {
     isValidatorRegistered(wallet.privateKey).then((stake) => {
@@ -170,17 +169,11 @@ const ExplorePage: React.FC = () => {
                 {miningStats ? (
                   <>
                     <Typography variant="body2" color="textSecondary" component="p">
-                      Total Blocks Mined: {miningStats.totalBlocks}
+                      Total Blocks Mined: {miningStats.minedBlocks}
                     </Typography>
                     <Typography variant="body2" color="textSecondary" component="p">
-                      Total Rewards Earned: {miningStats.totalRewards} LCD
+                      Total Rewards Earned: {miningStats.rewards} LCD
                     </Typography>
-                    <Typography variant="body2" color="textSecondary" component="p">
-                      Hash Rate: {miningStats.hashRate} H/s
-                    </Typography>
-                    <Button variant="contained" color="primary" style={{ marginTop: 16 }}>
-                      Start Mining
-                    </Button>
                   </>
                 ) : (
                   <Typography variant="body2" color="textSecondary" component="p">

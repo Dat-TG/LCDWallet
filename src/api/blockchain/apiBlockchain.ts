@@ -23,3 +23,11 @@ export const isValidatorRegistered = async (privateKey: string) => {
   const response = await AxiosClient.get(`/blocks/registered/${privateKey}`);
   return response.data.stake as number;
 };
+
+export const getMiningStats = async (address: string) => {
+  const response = await AxiosClient.get(`/blocks/mining-stats/${address}`);
+  return response.data as {
+    minedBlocks: number;
+    rewards: number;
+  };
+};
