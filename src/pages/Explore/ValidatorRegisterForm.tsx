@@ -7,7 +7,7 @@ import {
   DialogActions,
   Button,
 } from '@mui/material';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function ValidatorRegisterModal({
   open,
@@ -19,10 +19,13 @@ export default function ValidatorRegisterModal({
   open: boolean;
   handleClose: () => void;
   privateKey: string;
-  stake: number;
-  handleRegister: (value: number) => Promise<void>;
+  stake: number | undefined;
+  handleRegister: (value: number) => void;
 }) {
-  const [stakee, setStakee] = useState<string>(stake.toString());
+  const [stakee, setStakee] = useState<string | undefined>();
+  useEffect(() => {
+    setStakee(stake?.toString());
+  }, [stake]);
   return (
     <Dialog open={open} onClose={handleClose}>
       <DialogTitle>Register as Validator</DialogTitle>
@@ -44,7 +47,6 @@ export default function ValidatorRegisterModal({
           margin="dense"
           id="stake"
           label="Stake"
-          type="number"
           fullWidth
           value={stakee}
           onChange={(e) => setStakee(e.target.value)}
