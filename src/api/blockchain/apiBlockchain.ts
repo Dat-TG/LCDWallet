@@ -7,6 +7,11 @@ export const getLatestBlocks = async () => {
   return response.data as Block[];
 };
 
+export const getAllBlocks = async () => {
+  const response = await AxiosClient.get('/blocks/all');
+  return response.data as Block[];
+};
+
 export const requestFaucet = async (address: string) => {
   const response = await AxiosClient.post('/faucet', { address });
   return response.data.message as string;

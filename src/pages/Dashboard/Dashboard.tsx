@@ -41,6 +41,7 @@ import { Block } from '@/api/blockchain/type';
 import { getLatestBlocks } from '@/api/blockchain/apiBlockchain';
 import { TransactionDetails } from '@/api/wallet/type';
 import Loading from '@/components/Loading';
+import AllBlocksDialog from './AllBlocksDialog';
 
 ChartJS.register(
   ArcElement,
@@ -373,6 +374,15 @@ function Dashboard() {
                     ))}
                   </TableBody>
                 </Table>
+                {latestBlocks.length === 5 && latestBlocks[0].index > 4 && (
+                  <div
+                    style={{
+                      marginTop: '8px',
+                    }}
+                  >
+                    <AllBlocksDialog />
+                  </div>
+                )}
               </CardContent>
             </Card>
           </Grid>
