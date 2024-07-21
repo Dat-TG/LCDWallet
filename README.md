@@ -6,6 +6,8 @@ LCDWallet is the frontend for a blockchain cryptocurrency system that utilizes t
 
 You can find the backend repository here: [https://github.com/Dat-TG/LCDWalletServer](https://github.com/Dat-TG/LCDWalletServer)
 
+Demo video here: [https://youtu.be/vmtM5jB34fs?si=aGRTp-32N25Zo8Zr](https://youtu.be/vmtM5jB34fs?si=aGRTp-32N25Zo8Zr)
+
 ## 📜 Table of Contents
 
 - [Overview](#overview)
